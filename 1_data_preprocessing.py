@@ -143,16 +143,18 @@ def preprocess_pipeline(file_path):
     parties, regions, positions, years, fats = extract_features(rows)
     X, metadata = encode_features(parties, regions, positions, years)
     y = np.array(fats, dtype=int)
-    return X, y, metadata
+    return X, y, metadata, parties, regions, positions, years
 
-X, y, metadata = preprocess_pipeline('POLDYNASTY_ATENEO_DATASET-Data.csv')
+# Execute pipeline with raw lists returned for comparison printing
+X, y, metadata, parties, regions, positions, years = preprocess_pipeline('POLDYNASTY_ATENEO_DATASET-Data.csv')
 
-print(f"{'#':<4} | {'Target (y)':<10} | {'Standardized Year':<18} | {'Active Feature Indices (where X = 1.0)'}")
-print("-" * 85)
-
+# Print side-by-side comparison for the first 5 rows
+print("=" * 120)
+print(f"{'#':<3} | {'RAW STARTING DATA':<52} | {'PRE-PROCESSED NUMERICAL DATA (X & y)'}")
+print("-" * 120)
 for i in range(5):
-    # Find which column indices are marked 1.0 (the active party, region, and position)
+    raw_str = f"P:{parties[i][:10]} | R:{regions[i][:12]} | Pos:{positions[i][:8]} | Yr:{int(years[i])}"
     active_indices = np.nonzero(X[i])[0].tolist()
-    norm_year = X[i][-1]  # The last value is always the z-score normalized year
-    
-    print(f"{i+1:<4} | {y[i]:<10} | {norm_year:<18.4f} | {active_indices}")
+    proc_str = f"y={y[i]} | Yr(norm)={X[i][-1]:.2f} | Active Indices={active_indices}"
+    print(f"{i+1:<3} | {raw_str:<52} | {proc_str}")
+print("=" * 120)
