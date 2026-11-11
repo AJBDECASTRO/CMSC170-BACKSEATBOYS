@@ -49,3 +49,22 @@ def extract_features(rows):
             fats.append(0)
             
     return parties, regions, positions, years, fats
+
+def get_unique_items(items_list):
+    """
+    Extracts sorted unique category values using set
+    """
+    unique_set = set()
+    for item in items_list:
+        unique_set.add(item)
+    return sorted(list(unique_set))
+
+def build_mapping(unique_items):
+    """
+    Constructs an index mapping dictionary that maps each unique category string 
+    to a unique integer index for one-hot vector positioning. (In this case, if it belongs in a fat dynasty or not)
+    """
+    mapping = {}
+    for i in range(len(unique_items)):
+        mapping[unique_items[i]] = i
+    return mapping
