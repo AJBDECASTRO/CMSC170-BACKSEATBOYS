@@ -56,3 +56,22 @@ def predict_perceptron(weights, test_point):
     # Map bipolar result back to 0 or 1
     return 1 if v >= 0.0 else 0
 
+def run_perceptron_experiment(X_train, y_train, X_test, y_test, lr=0.01, bias=0.1, max_iter=5):
+    """
+    Trains the Perceptron model on training data and evaluates it against the test set, 
+    returning test accuracy, final weights, and prediction outputs.
+    """
+    weights = train_perceptron(X_train, y_train, learning_rate=lr, bias_weight=bias, max_iterations=max_iter)
+    
+    correct = 0
+    predictions = []
+    
+    # Evaluate model predictions against actual test labels
+    for i in range(len(X_test)):
+        pred = predict_perceptron(weights, X_test[i])
+        predictions.append(pred)
+        if pred == y_test[i]:
+            correct += 1
+
+    accuracy = (correct / len(X_test)) * 100
+    return accuracy, weights, predictions
