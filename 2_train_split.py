@@ -1,5 +1,4 @@
 import numpy as np
-import 1_data
 
 def train_test_split_scratch(X, y, test_size=0.2, random_seed=42):
     """
