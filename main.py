@@ -1,7 +1,6 @@
 # main.py
 import numpy as np
 from data_preprocessing import preprocess_pipeline
-from train_test_split import train_test_split_scratch  # Assumes your split function is saved in train_test_split.py
 
 # 1. Execute pipeline with raw lists returned for comparison printing
 print("Loading dataset and running preprocessing pipeline...")
