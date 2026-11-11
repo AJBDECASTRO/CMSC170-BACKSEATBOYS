@@ -90,3 +90,57 @@ def compute_mean_std(values_list):
     if std == 0.0:
         std = 1.0
     return mean, std
+
+def encode_features(parties, regions, positions, years):
+    """
+    Encodes categorical features into sparse one-hot binary vectors, standardizes 
+    the numerical year feature via z-score scaling, and compiles everything into 
+    a 2D NumPy feature matrix X along with a metadata dictionary.
+    """
+    unique_parties = get_unique_items(parties)
+    unique_regions = get_unique_items(regions)
+    unique_positions = get_unique_items(positions)
+    
+    party_map = build_mapping(unique_parties)
+    region_map = build_mapping(unique_regions)
+    position_map = build_mapping(unique_positions)
+    
+    year_mean, year_std = compute_mean_std(years)
+    
+    encoded_matrix = []
+    for i in range(len(parties)):
+        p_vec = [0.0] * len(unique_parties)
+        if parties[i] in party_map:
+            p_vec[party_map[parties[i]]] = 1.0
+            
+        r_vec = [0.0] * len(unique_regions)
+        if regions[i] in region_map:
+            r_vec[region_map[regions[i]]] = 1.0
+            
+        pos_vec = [0.0] * len(unique_positions)
+        if positions[i] in position_map:
+            pos_vec[position_map[positions[i]]] = 1.0
+            
+        norm_year = (years[i] - year_mean) / year_std
+        
+        feature_vector = p_vec + r_vec + pos_vec + [norm_year]
+        encoded_matrix.append(feature_vector)
+        
+    return np.array(encoded_matrix, dtype=float), {
+        'party_map': party_map,
+        'region_map': region_map,
+        'position_map': position_map,
+        'year_mean': year_mean,
+        'year_std': year_std
+    }
+
+def preprocess_pipeline(file_path):
+    """
+    Executes the end-to-end preprocessing pipeline by sequentially loading data, 
+    extracting features, encoding matrices, and returning X, y, and metadata.
+    """
+    rows = load_dataset(file_path)
+    parties, regions, positions, years, fats = extract_features(rows)
+    X, metadata = encode_features(parties, regions, positions, years)
+    y = np.array(fats, dtype=int)
+    return X, y, metadata
