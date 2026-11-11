@@ -144,3 +144,15 @@ def preprocess_pipeline(file_path):
     X, metadata = encode_features(parties, regions, positions, years)
     y = np.array(fats, dtype=int)
     return X, y, metadata
+
+X, y, metadata = preprocess_pipeline('POLDYNASTY_ATENEO_DATASET-Data.csv')
+
+print(f"{'#':<4} | {'Target (y)':<10} | {'Standardized Year':<18} | {'Active Feature Indices (where X = 1.0)'}")
+print("-" * 85)
+
+for i in range(5):
+    # Find which column indices are marked 1.0 (the active party, region, and position)
+    active_indices = np.nonzero(X[i])[0].tolist()
+    norm_year = X[i][-1]  # The last value is always the z-score normalized year
+    
+    print(f"{i+1:<4} | {y[i]:<10} | {norm_year:<18.4f} | {active_indices}")
