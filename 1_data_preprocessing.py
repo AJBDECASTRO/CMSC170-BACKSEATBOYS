@@ -68,3 +68,25 @@ def build_mapping(unique_items):
     for i in range(len(unique_items)):
         mapping[unique_items[i]] = i
     return mapping
+
+def compute_mean_std(values_list):
+    """
+    Computes the numerical mean and standard deviation of a list of numbers 
+    to facilitate z-score.
+    """
+    total = 0.0
+    count = 0.0
+    for val in values_list:
+        total += val
+        count += 1.0
+    mean = total / count if count > 0 else 0.0
+    
+    variance_sum = 0.0
+    for val in values_list:
+        diff = val - mean
+        variance_sum += diff * diff
+    variance = variance_sum / count if count > 0 else 1.0
+    std = variance ** 0.5
+    if std == 0.0:
+        std = 1.0
+    return mean, std
