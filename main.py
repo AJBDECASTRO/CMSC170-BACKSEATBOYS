@@ -1,18 +1,42 @@
-# main.py
-import numpy as np
 from data_preprocessing import preprocess_pipeline
+from knn_model import run_knn_experiment
+from perceptron_model import run_perceptron_experiment
 
-# 1. Execute pipeline with raw lists returned for comparison printing
-print("Loading dataset and running preprocessing pipeline...")
+print("=" * 60)
+print("LOADING AND PREPROCESSING DATASET...")
+print("=" * 60)
+
+# 1. Load dataset and execute the preprocessing pipeline
 X, y, metadata, parties, regions, positions, years = preprocess_pipeline('POLDYNASTY_ATENEO_DATASET-Data.csv')
 
-# 2. Print side-by-side comparison for the first 5 rows
-print("\n" + "=" * 120)
-print(f"{'#':<3} | {'RAW STARTING DATA':<52} | {'PRE-PROCESSED NUMERICAL DATA (X & y)'}")
-print("-" * 120)
-for i in range(5):
-    raw_str = f"P:{parties[i][:10]} | R:{regions[i][:12]} | Pos:{positions[i][:8]} | Yr:{int(years[i])}"
-    active_indices = np.nonzero(X[i])[0].tolist()
-    proc_str = f"y={y[i]} | Yr(norm)={X[i][-1]:.2f} | Active Indices={active_indices}"
-    print(f"{i+1:<3} | {raw_str:<52} | {proc_str}")
-print("=" * 120 + "\n")
+# 2. Perform a direct sequential split (70% train, 30% test)
+dataset_size = X.shape[0]
+train_size = round(dataset_size * 0.70)
+
+X_train, X_test = X[:train_size], X[train_size:]
+y_train, y_test = y[:train_size], y[train_size:]
+
+print(f"Total Dataset Rows: {dataset_size}")
+print(f"Training Rows:      {train_size}")
+print(f"Testing Rows:       {dataset_size - train_size}\n")
+
+# --- 3. Run k-Nearest Neighbors (k-NN) Experiment ---
+
+print("=" * 60)
+print("EXECUTING k-NEAREST NEIGHBORS (k=5, p=2)...")
+print("=" * 60)
+knn_acc, knn_preds = run_knn_experiment(X_train, y_train, X_test, y_test, k=5, p=2)
+print(f"k-NN Test Accuracy: {knn_acc:.2f}%")
+print(f"Sample k-NN Predictions (first 5): {knn_preds[:5]}")
+print()
+
+# --- 4. Run Perceptron Experiment ---
+print("=" * 60)
+print("EXECUTING PERCEPTRON (lr=0.01, bias=0.1)...")
+print("=" * 60)
+perceptron_acc, final_weights, perceptron_preds = run_perceptron_experiment(
+    X_train, y_train, X_test, y_test, lr=0.01, bias=0.1, max_iter=5
+)
+print(f"Perceptron Test Accuracy: {perceptron_acc:.2f}%")
+print(f"Sample Perceptron Predictions (first 5): {perceptron_preds[:5]}")
+print("=" * 60)

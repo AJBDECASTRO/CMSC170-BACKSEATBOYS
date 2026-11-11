@@ -1,5 +1,3 @@
-# knn_model.py
-
 def minkow_distance(x, v, p):
     """
     Calculates the Minkowski distance between two feature vectors x and v 
