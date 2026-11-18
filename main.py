@@ -16,9 +16,9 @@ X = X[:sample_limit]
 y = y[:sample_limit]
 # ------------------------
 
-# 2. Perform a direct sequential split (70% train, 30% test)
+# 2. Perform a direct sequential split (80% train, 20% test)
 dataset_size = X.shape[0]
-train_size = round(dataset_size * 0.70)
+train_size = round(dataset_size * 0.80)
 
 X_train, X_test = X[:train_size], X[train_size:]
 y_train, y_test = y[:train_size], y[train_size:]
