@@ -2,9 +2,7 @@ import math
 
 def discretize_value(value):
     """
-    Converts a continuous feature value into a discrete token so it can be
-    counted like a word in the Bag-of-Words model. One-hot features naturally
-    become tokens 0.0 and 1.0, while the standardized year is rounded.
+    Converts a continuous feature value into a discrete token by rounding a after converting to a float value)
     """
     return round(float(value), 2)
 
@@ -12,10 +10,6 @@ def train_naive_bayes(X_train, y_train, k=1.0):
     """
     Trains a Naive Bayes classifier using the additive smoothing formula
     P(w | class) = (count(w in class) + k) / (count(# of words in class) + k * dictionarySize).
-
-    Class priors follow P(class) = count(class) / count(all classes). Each feature
-    column is treated as one word position whose "vocabulary" is the set of
-    discrete values observed across all training classes.
     """
     train_x = X_train.tolist() if hasattr(X_train, 'tolist') else X_train
     train_y = y_train.tolist() if hasattr(y_train, 'tolist') else y_train
@@ -81,8 +75,7 @@ def compute_log_posteriors(model, test_point):
 def predict_naive_bayes(model, test_point):
     """
     Predicts the class label for a single test point by selecting the class with
-    the highest posterior score. For two classes this is equivalent to the 50%
-    threshold described in the lab.
+    the highest score.
     """
     scores = compute_log_posteriors(model, test_point)
     best_label = None
