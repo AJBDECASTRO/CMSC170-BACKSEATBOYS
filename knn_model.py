@@ -48,13 +48,26 @@ def run_knn_experiment(X_train, y_train, X_test, y_test, k=5, p=2):
     
     correct = 0
     predictions = []
+    tp = tn = fp = fn = 0
     
     # Iterate through all test samples and evaluate predictions
     for i in range(len(test_x)):
         pred = predict_knn(train_x, train_y, test_x[i], k, p)
         predictions.append(pred)
-        if pred == test_y[i]:
-            correct += 1
+        if pred == test_y[i] == 1:              # True positive
+            tp += 1
+        elif pred == test_y[i] == 0:            # True negative
+            tn += 1
+        elif pred == 1 and test_y[i] == 0:      # False positive
+            fp += 1
+        else:                                   # False negative
+            fn += 1
 
-    accuracy = (correct / len(test_x)) * 100
-    return accuracy, predictions
+    print('KNN CONFUSION MATRIX')
+    print(f'{tp}\t{fn}\n{fp}\t{tn}\n')
+    
+    accuracy = ((tp + tn) / len(test_x)) * 100
+    precision = (tp / (tp + fp)) * 100
+    recall = (tp / (tp + fn)) * 100
+    f1 = 2 * ((precision * recall) / (precision + recall))
+    return (accuracy, precision, recall, f1), predictions
