@@ -11,14 +11,14 @@ print("=" * 60)
 # 1. Load dataset and execute the preprocessing pipeline
 X, y, metadata, parties, regions, positions, years = preprocess_pipeline('POLDYNASTY_ATENEO_DATASET-Data.csv')
 
-sample_limit = 10000  
+sample_limit = 10000
 X = X[:sample_limit]
 y = y[:sample_limit]
 # ------------------------
 
 # 2. Perform a direct sequential split (80% train, 20% test)
 dataset_size = X.shape[0]
-train_size = round(dataset_size * 0.80)
+train_size = round(dataset_size * 0.70)
 
 X_train, X_test = X[:train_size], X[train_size:]
 y_train, y_test = y[:train_size], y[train_size:]
@@ -70,7 +70,17 @@ print()
 print("=" * 60)
 print("EXECUTING NAIVE BAYES (Laplace smoothing k=1.0)...")
 print("=" * 60)
-nb_acc, nb_preds = run_naive_bayes_experiment(X_train, y_train, X_test, y_test, k=1.0)
-print(f"Naive Bayes Test Accuracy: {nb_acc:.2f}%")
+nb_metrics, nb_preds = run_naive_bayes_experiment(X_train, y_train, X_test, y_test, k=1.0)
+print(f"Naive Bayes Test Accuracy: {nb_metrics[0]:.2f}%")
 print(f"Sample Naive Bayes Predictions (first 5): {nb_preds[:5]}")
+print()
+print(f"Naive Bayes Test Precision: {nb_metrics[1]:.2f}%")
+print(f"Sample Naive Bayes Predictions (first 5): {nb_preds[:5]}")
+print()
+print(f"Naive Bayes Test Recall: {nb_metrics[2]:.2f}%")
+print(f"Sample Naive Bayes Predictions (first 5): {nb_preds[:5]}")
+print()
+print(f"Naive Bayes Test F1-score: {nb_metrics[3]:.2f}%")
+print(f"Sample Naive Bayes Predictions (first 5): {nb_preds[:5]}")
+print()
 print("=" * 60)
