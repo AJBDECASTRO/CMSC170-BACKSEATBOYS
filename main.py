@@ -11,7 +11,7 @@ print("=" * 60)
 # 1. Load dataset and execute the preprocessing pipeline
 X, y, metadata, parties, regions, positions, years = preprocess_pipeline('POLDYNASTY_ATENEO_DATASET-Data.csv')
 
-sample_limit = 1000  
+sample_limit = 10000  
 X = X[:sample_limit]
 y = y[:sample_limit]
 # ------------------------
@@ -31,8 +31,17 @@ print(f"Testing Rows:       {dataset_size - train_size}\n")
 print("=" * 60)
 print("EXECUTING k-NEAREST NEIGHBORS (k=5, p=2)...")
 print("=" * 60)
-knn_acc, knn_preds = run_knn_experiment(X_train, y_train, X_test, y_test, k=5, p=2)
-print(f"k-NN Test Accuracy: {knn_acc:.2f}%")
+knn_metrics, knn_preds = run_knn_experiment(X_train, y_train, X_test, y_test, k=5, p=2)
+print(f"k-NN Test Accuracy: {knn_metrics[0]:.2f}%")
+print(f"Sample k-NN Predictions (first 5): {knn_preds[:5]}")
+print()
+print(f"k-NN Test Precision: {knn_metrics[1]:.2f}%")
+print(f"Sample k-NN Predictions (first 5): {knn_preds[:5]}")
+print()
+print(f"k-NN Test Recall: {knn_metrics[2]:.2f}%")
+print(f"Sample k-NN Predictions (first 5): {knn_preds[:5]}")
+print()
+print(f"k-NN Test F1-score: {knn_metrics[3]:.2f}%")
 print(f"Sample k-NN Predictions (first 5): {knn_preds[:5]}")
 print()
 
@@ -40,12 +49,22 @@ print()
 print("=" * 60)
 print("EXECUTING PERCEPTRON (lr=0.01, bias=0.1)...")
 print("=" * 60)
-perceptron_acc, final_weights, perceptron_preds = run_perceptron_experiment(
+perceptron_metrics, final_weights, perceptron_preds = run_perceptron_experiment(
     X_train, y_train, X_test, y_test, lr=0.01, bias=0.1, max_iter=5
 )
-print(f"Perceptron Test Accuracy: {perceptron_acc:.2f}%")
+print(f"Perceptron Test Accuracy: {perceptron_metrics[0]:.2f}%")
 print(f"Sample Perceptron Predictions (first 5): {perceptron_preds[:5]}")
 print()
+print(f"Perceptron Test Precision: {perceptron_metrics[1]:.2f}%")
+print(f"Sample Perceptron Predictions (first 5): {perceptron_preds[:5]}")
+print()
+print(f"Perceptron Test Recall: {perceptron_metrics[2]:.2f}%")
+print(f"Sample Perceptron Predictions (first 5): {perceptron_preds[:5]}")
+print()
+print(f"Perceptron Test F1-score: {perceptron_metrics[3]:.2f}%")
+print(f"Sample Perceptron Predictions (first 5): {perceptron_preds[:5]}")
+print()
+
 
 # --- 5. Run Naive Bayes Experiment ---
 print("=" * 60)
