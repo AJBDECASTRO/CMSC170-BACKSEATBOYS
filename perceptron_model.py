@@ -81,6 +81,9 @@ def run_perceptron_experiment(X_train, y_train, X_test, y_test, lr=0.01, bias=0.
         else:                                   # False negative
             fn += 1
 
+    print('PERCEPTRON CONFUSION MATRIX')
+    print(f'{tp}\t{fn}\n{fp}\t{tn}\n')
+
     accuracy = ((tp + tn) / len(X_test)) * 100
     precision = (tp / (tp + fp)) * 100
     recall = (tp / (tp + fn)) * 100
