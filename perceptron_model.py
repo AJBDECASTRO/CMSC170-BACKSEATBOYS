@@ -66,12 +66,26 @@ def run_perceptron_experiment(X_train, y_train, X_test, y_test, lr=0.01, bias=0.
     correct = 0
     predictions = []
     
+    tp = tn = fp = fn = 0
+    
     # Evaluate model predictions against actual test labels
     for i in range(len(X_test)):
         pred = predict_perceptron(weights, X_test[i])
         predictions.append(pred)
-        if pred == y_test[i]:
-            correct += 1
+        if pred == y_test[i] == 1:              # True positive
+            tp += 1
+        elif pred == y_test[i] == 0:            # True negative
+            tn += 1
+        elif pred == 1 and y_test[i] == 0:      # False positive
+            fp += 1
+        else:                                   # False negative
+            fn += 1
 
-    accuracy = (correct / len(X_test)) * 100
-    return accuracy, weights, predictions
+    accuracy = ((tp + tn) / len(X_test)) * 100
+    precision = (tp / (tp + fp)) * 100
+    recall = (tp / (tp + fn)) * 100
+    f1 = 2 * ((precision * recall) / (precision + recall))
+    return (accuracy, precision, recall, f1), weights, predictions
+
+    # accuracy = (correct / len(X_test)) * 100
+    # return accuracy, weights, predictions
